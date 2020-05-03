@@ -1,0 +1,43 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: FundingFactory
+    network: kovan
+    source:
+      address: '0xfd99ba75A8515FD8E277b76F36719bA949Cb765F'
+      abi: FundingFactory
+      startBlock: 18251674
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - FundingCreated
+      abis:
+        - name: FundingFactory
+          file: ./abis/FundingFactory.json
+      eventHandlers:
+        - event: FundingCreated(indexed address,address,address,address)
+          handler: handleFundingCreated
+      file: ./src/mapping.ts
+# templates:
+#   - kind: ethereum/contract
+#     name: Funding
+#     network: kovan
+#     source:
+#       abi: Funding
+#     mapping:
+#       kind: ethereum/events
+#       apiVersion: 0.0.4
+#       language: wasm/assemblyscript
+#       file: ./src/mapping.ts
+#       entities:
+#         - Funding
+#       abis:
+#         - name: Funding
+#           file: ./abis/Funding.json
+#       eventHandlers:
+#         - event: Deposited(indexed address,uint256)
+#           handler: handleDeposited

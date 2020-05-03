@@ -1,0 +1,18 @@
+type Funding @entity {
+  id: ID!
+  txHash: Bytes! # address
+  createdAt: Int!
+  address: Bytes! # address
+  owner: Bytes! # address
+  operator: Bytes! # address
+  interestToken: Bytes! # address
+}
+
+
+type Deposit @entity {
+  id: ID!
+  txHash: Bytes! # address
+  sender: Bytes! # address
+  amount: BigInt! # address
+  createdAt: Int!
+}
