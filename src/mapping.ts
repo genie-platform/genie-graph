@@ -12,6 +12,7 @@ export function handleFundingCreated(event: FundingCreated): void {
   entity.owner = event.params.owner
   entity.operator = event.params.operator
   entity.interestToken = event.params.interestToken
+  entity.totalStaked = BigInt.fromI32(0)
 
   entity.createdAt = event.block.timestamp.toI32()
   entity.txHash = event.transaction.hash
