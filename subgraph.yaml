@@ -22,22 +22,24 @@ dataSources:
         - event: FundingCreated(indexed address,address,address,address)
           handler: handleFundingCreated
       file: ./src/mapping.ts
-# templates:
-#   - kind: ethereum/contract
-#     name: Funding
-#     network: kovan
-#     source:
-#       abi: Funding
-#     mapping:
-#       kind: ethereum/events
-#       apiVersion: 0.0.4
-#       language: wasm/assemblyscript
-#       file: ./src/mapping.ts
-#       entities:
-#         - Funding
-#       abis:
-#         - name: Funding
-#           file: ./abis/Funding.json
-#       eventHandlers:
-#         - event: Deposited(indexed address,uint256)
-#           handler: handleDeposited
+templates:
+  - kind: ethereum/contract
+    name: Funding
+    network: kovan
+    source:
+      abi: Funding
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      entities:
+        - Funding
+      abis:
+        - name: Funding
+          file: ./abis/Funding.json
+      eventHandlers:
+        - event: Deposited(indexed address,uint256)
+          handler: handleDeposited
+        - event: Withdrawn(indexed address,uint256)
+          handler: handleWithdrawn

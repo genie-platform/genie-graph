@@ -6,14 +6,23 @@ type Funding @entity {
   owner: Bytes! # address
   operator: Bytes! # address
   interestToken: Bytes! # address
-  totalStaked: BigInt!
 }
 
 
 type Deposit @entity {
   id: ID!
   txHash: Bytes! # address
+  createdAt: Int!
+  funding: Bytes! #address
   sender: Bytes! # address
   amount: BigInt! # address
+}
+
+type Withdraw @entity {
+  id: ID!
+  txHash: Bytes! # address
   createdAt: Int!
+  funding: Bytes! #address
+  sender: Bytes! # address
+  amount: BigInt! # address
 }
