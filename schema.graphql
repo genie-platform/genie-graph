@@ -26,3 +26,12 @@ type Withdraw @entity {
   sender: Bytes! # address
   amount: BigInt! # address
 }
+
+type Reward @entity {
+  id: ID!
+  txHash: Bytes! # address
+  createdAt: Int!
+  funding: Bytes! #address
+  receiver: Bytes! # address
+  amount: BigInt! # address
+}

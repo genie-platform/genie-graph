@@ -1,9 +1,8 @@
-import { BigInt } from "@graphprotocol/graph-ts"
 import { FundingCreated } from "../generated/FundingFactory/FundingFactory"
-import { Deposited, Withdrawn } from "../generated/templates/Funding/Funding"
+import { Deposited, Withdrawn, Rewarded } from "../generated/templates/Funding/Funding"
 import { Funding as FundingDataSource } from "../generated/templates"
 
-import { Funding, Deposit, Withdraw } from "../generated/schema"
+import { Funding, Deposit, Withdraw, Reward } from "../generated/schema"
 
 export function handleFundingCreated(event: FundingCreated): void {
   let entity = new Funding(event.params.funding.toHexString())
@@ -42,6 +41,20 @@ export function handleWithdrawn(event: Withdrawn): void {
 
   let entity = new Withdraw(id)
   entity.sender = event.params.sender
+  entity.amount = event.params.amount
+
+  entity.funding = event.address
+  entity.createdAt = event.block.timestamp.toI32()
+  entity.txHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleRewarded(event: Rewarded): void {
+  let id = event.transaction.hash.toHexString() + '_' + event.logIndex.toString() as string
+
+  let entity = new Reward(id)
+  entity.receiver = event.params.receiver
   entity.amount = event.params.amount
 
   entity.funding = event.address

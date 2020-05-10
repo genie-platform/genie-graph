@@ -43,3 +43,5 @@ templates:
           handler: handleDeposited
         - event: Withdrawn(indexed address,uint256)
           handler: handleWithdrawn
+        - event: Rewarded(indexed address,uint256)
+          handler: handleRewarded
