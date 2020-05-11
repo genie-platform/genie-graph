@@ -6,6 +6,8 @@ type Funding @entity {
   owner: Bytes! # address
   operator: Bytes! # address
   interestToken: Bytes! # address
+  totalStaked: BigInt!
+  numberOfPlayers: Int!
 }
 
 

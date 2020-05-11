@@ -1,7 +1,8 @@
+import { BigInt } from '@graphprotocol/graph-ts'
+
 import { FundingCreated } from "../generated/FundingFactory/FundingFactory"
 import { Deposited, Withdrawn, Rewarded } from "../generated/templates/Funding/Funding"
 import { Funding as FundingDataSource } from "../generated/templates"
-
 import { Funding, Deposit, Withdraw, Reward } from "../generated/schema"
 
 export function handleFundingCreated(event: FundingCreated): void {
@@ -12,13 +13,14 @@ export function handleFundingCreated(event: FundingCreated): void {
   entity.owner = event.params.owner
   entity.operator = event.params.operator
   entity.interestToken = event.params.interestToken
+  entity.totalStaked = BigInt.fromI32(0)
+  entity.numberOfPlayers = 0
 
   entity.createdAt = event.block.timestamp.toI32()
   entity.txHash = event.transaction.hash
 
   FundingDataSource.create(event.params.funding)
 
-  // Entities can be written to the store with `.save()`
   entity.save()
 }
 
@@ -34,6 +36,11 @@ export function handleDeposited(event: Deposited): void {
   entity.txHash = event.transaction.hash
 
   entity.save()
+
+  let funding = Funding.load(entity.funding.toHexString())
+  funding.totalStaked = funding.totalStaked.plus(entity.amount)
+  funding.numberOfPlayers = funding.numberOfPlayers + 1
+  funding.save()
 }
 
 export function handleWithdrawn(event: Withdrawn): void {
@@ -48,6 +55,11 @@ export function handleWithdrawn(event: Withdrawn): void {
   entity.txHash = event.transaction.hash
 
   entity.save()
+
+  let funding = Funding.load(entity.funding.toHexString())
+  funding.totalStaked = funding.totalStaked.minus(entity.amount)
+  funding.numberOfPlayers = funding.numberOfPlayers - 1
+  funding.save()
 }
 
 export function handleRewarded(event: Rewarded): void {
