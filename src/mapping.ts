@@ -1,9 +1,36 @@
-import { BigInt } from '@graphprotocol/graph-ts'
+import { Bytes, BigInt } from '@graphprotocol/graph-ts'
 
 import { FundingCreated } from "../generated/FundingFactory/FundingFactory"
 import { Deposited, Withdrawn, Rewarded } from "../generated/templates/Funding/Funding"
 import { Funding as FundingDataSource } from "../generated/templates"
-import { Funding, Deposit, Withdraw, Reward } from "../generated/schema"
+import { Funding, Deposit, Withdraw, Reward, AccountPool, Account, } from "../generated/schema"
+
+export function updateAccountPool(
+  accountAddress: Bytes,
+  poolAddress: Bytes
+) : AccountPool {
+  let accountd = accountAddress.toHex()
+  let account = Account.load(accountd)
+  if (account == null) {
+    let account = new Account(accountd)
+    account.address = accountAddress
+    account.save()
+  }
+
+  let accountTokenId = poolAddress.toHexString() + '_' + accountAddress.toHexString()
+
+  let accountToken = AccountPool.load(accountTokenId)
+  if (accountToken == null) {
+    accountToken = new AccountPool(accountTokenId)
+    accountToken.account = accountAddress.toHexString()
+    accountToken.poolAddress = poolAddress
+
+    accountToken.balance = BigInt.fromI32(0)
+  }
+
+  return accountToken as AccountPool
+}
+
 
 export function handleFundingCreated(event: FundingCreated): void {
   let entity = new Funding(event.params.funding.toHexString())
@@ -42,6 +69,14 @@ export function handleDeposited(event: Deposited): void {
   funding.totalStaked = funding.totalStaked.plus(entity.amount)
   funding.numberOfPlayers = funding.numberOfPlayers + 1
   funding.save()
+
+
+  let accountPool = updateAccountPool(
+    entity.sender,
+    entity.funding
+  )
+  accountPool.balance = accountPool.balance.plus(entity.amount)
+  accountPool.save()
 }
 
 export function handleWithdrawn(event: Withdrawn): void {

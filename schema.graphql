@@ -38,3 +38,17 @@ type Reward @entity {
   receiver: Bytes! # address
   amount: BigInt! # address
 }
+
+type AccountPool @entity {
+  "Concatenation of pool address and user address"
+  id: ID!
+  poolAddress: Bytes!
+  account: Account!
+  balance: BigInt!
+}
+
+type Account @entity {
+  id: ID!
+  address: Bytes!
+  pools: [AccountPool!]! @derivedFrom(field: "account")
+}
