@@ -18,6 +18,7 @@ type Deposit @entity {
   funding: Bytes! #address
   sender: Bytes! # address
   amount: BigInt! # address
+  userId: String
 }
 
 type Withdraw @entity {

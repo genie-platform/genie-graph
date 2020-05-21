@@ -31,8 +31,29 @@
     "type": "event"
   },
   {
-    "constant": false,
+    "constant": true,
     "inputs": [],
+    "name": "link",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_link",
+        "type": "address"
+      }
+    ],
     "name": "initialize",
     "outputs": [],
     "payable": false,
@@ -51,6 +72,26 @@
         "internalType": "address",
         "name": "_operator",
         "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "_oracleUrl",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_oraclePath",
+        "type": "string"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_level",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "ticketPrice",
+        "type": "uint256"
       }
     ],
     "name": "createFunding",

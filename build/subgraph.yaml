@@ -6,7 +6,7 @@ dataSources:
     name: FundingFactory
     network: kovan
     source:
-      address: "0xfd99ba75A8515FD8E277b76F36719bA949Cb765F"
+      address: "0x28b541f3942e207fB25CEB8b74D8Cdef33Cb17f7"
       abi: FundingFactory
       startBlock: 18251674
     mapping:
@@ -39,7 +39,7 @@ templates:
         - name: Funding
           file: Funding/abis/Funding.json
       eventHandlers:
-        - event: Deposited(indexed address,uint256)
+        - event: Deposited(indexed address,uint256,string)
           handler: handleDeposited
         - event: Withdrawn(indexed address,uint256)
           handler: handleWithdrawn

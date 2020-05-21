@@ -34,6 +34,7 @@ export function handleDeposited(event: Deposited): void {
   entity.funding = event.address
   entity.createdAt = event.block.timestamp.toI32()
   entity.txHash = event.transaction.hash
+  entity.userId = event.params.userId
 
   entity.save()
 
