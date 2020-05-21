@@ -20,7 +20,7 @@ dataSources:
           file: FundingFactory/abis/FundingFactory.json
       eventHandlers:
         - event: FundingCreated(indexed address,address,address,address)
-          handler: handleFundingCreated
+          handler: handlePoolCreated
       file: FundingFactory/FundingFactory.wasm
 templates:
   - kind: ethereum/contract

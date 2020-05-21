@@ -1,9 +1,9 @@
-import { Bytes, BigInt } from '@graphprotocol/graph-ts'
+import { Bytes, BigInt, store } from '@graphprotocol/graph-ts'
 
 import { FundingCreated } from "../generated/FundingFactory/FundingFactory"
 import { Deposited, Withdrawn, Rewarded } from "../generated/templates/Funding/Funding"
-import { Funding as FundingDataSource } from "../generated/templates"
-import { Funding, Deposit, Withdraw, Reward, AccountPool, Account, } from "../generated/schema"
+import { Funding as PoolDataSource } from "../generated/templates"
+import { Pool, Deposit, Withdraw, Reward, AccountPool, Account, } from "../generated/schema"
 
 export function updateAccountPool(
   accountAddress: Bytes,
@@ -32,8 +32,8 @@ export function updateAccountPool(
 }
 
 
-export function handleFundingCreated(event: FundingCreated): void {
-  let entity = new Funding(event.params.funding.toHexString())
+export function handlePoolCreated(event: FundingCreated): void {
+  let entity = new Pool(event.params.funding.toHexString())
 
   // Entity fields can be set based on event parameters
   entity.address = event.params.funding
@@ -46,7 +46,7 @@ export function handleFundingCreated(event: FundingCreated): void {
   entity.createdAt = event.block.timestamp.toI32()
   entity.txHash = event.transaction.hash
 
-  FundingDataSource.create(event.params.funding)
+  PoolDataSource.create(event.params.funding)
 
   entity.save()
 }
@@ -58,22 +58,21 @@ export function handleDeposited(event: Deposited): void {
   entity.sender = event.params.sender
   entity.amount = event.params.amount
 
-  entity.funding = event.address
+  entity.pool = event.address
   entity.createdAt = event.block.timestamp.toI32()
   entity.txHash = event.transaction.hash
   entity.userId = event.params.userId
 
   entity.save()
 
-  let funding = Funding.load(entity.funding.toHexString())
-  funding.totalStaked = funding.totalStaked.plus(entity.amount)
-  funding.numberOfPlayers = funding.numberOfPlayers + 1
-  funding.save()
-
+  let pool = Pool.load(entity.pool.toHexString())
+  pool.totalStaked = pool.totalStaked.plus(entity.amount)
+  pool.numberOfPlayers = pool.numberOfPlayers + 1
+  pool.save()
 
   let accountPool = updateAccountPool(
     entity.sender,
-    entity.funding
+    entity.pool
   )
   accountPool.balance = accountPool.balance.plus(entity.amount)
   accountPool.save()
@@ -86,16 +85,27 @@ export function handleWithdrawn(event: Withdrawn): void {
   entity.sender = event.params.sender
   entity.amount = event.params.amount
 
-  entity.funding = event.address
+  entity.pool = event.address
   entity.createdAt = event.block.timestamp.toI32()
   entity.txHash = event.transaction.hash
 
   entity.save()
 
-  let funding = Funding.load(entity.funding.toHexString())
-  funding.totalStaked = funding.totalStaked.minus(entity.amount)
-  funding.numberOfPlayers = funding.numberOfPlayers - 1
-  funding.save()
+  let pool = Pool.load(entity.pool.toHexString())
+  pool.totalStaked = pool.totalStaked.minus(entity.amount)
+  pool.numberOfPlayers = pool.numberOfPlayers - 1
+  pool.save()
+
+  let accountPool = updateAccountPool(
+    entity.sender,
+    entity.pool
+  )
+  accountPool.balance = accountPool.balance.minus(entity.amount)
+  if (accountPool.balance == BigInt.fromI32(0)) {
+    store.remove('AccountPool', accountPool.id)
+  } else {
+    accountPool.save()
+  }
 }
 
 export function handleRewarded(event: Rewarded): void {
@@ -105,7 +115,7 @@ export function handleRewarded(event: Rewarded): void {
   entity.receiver = event.params.receiver
   entity.amount = event.params.amount
 
-  entity.funding = event.address
+  entity.pool = event.address
   entity.createdAt = event.block.timestamp.toI32()
   entity.txHash = event.transaction.hash
 

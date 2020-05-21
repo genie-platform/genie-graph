@@ -1,4 +1,4 @@
-type Funding @entity {
+type Pool @entity {
   id: ID!
   txHash: Bytes! # address
   createdAt: Int!
@@ -15,7 +15,7 @@ type Deposit @entity {
   id: ID!
   txHash: Bytes! # address
   createdAt: Int!
-  funding: Bytes! #address
+  pool: Bytes! #address
   sender: Bytes! # address
   amount: BigInt! # address
   userId: String
@@ -25,7 +25,7 @@ type Withdraw @entity {
   id: ID!
   txHash: Bytes! # address
   createdAt: Int!
-  funding: Bytes! #address
+  pool: Bytes! #address
   sender: Bytes! # address
   amount: BigInt! # address
 }
@@ -34,7 +34,7 @@ type Reward @entity {
   id: ID!
   txHash: Bytes! # address
   createdAt: Int!
-  funding: Bytes! #address
+  pool: Bytes! #address
   receiver: Bytes! # address
   amount: BigInt! # address
 }
