@@ -6,7 +6,7 @@ dataSources:
     name: FundingFactory
     network: kovan
     source:
-      address: '0x28b541f3942e207fB25CEB8b74D8Cdef33Cb17f7'
+      address: '0xb1567598A1B0f892Df8683092eCa1B97520bBb32'
       abi: FundingFactory
       startBlock: 18251674
     mapping:

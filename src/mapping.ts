@@ -75,6 +75,7 @@ export function handleDeposited(event: Deposited): void {
     entity.pool
   )
   accountPool.balance = accountPool.balance.plus(entity.amount)
+  accountPool.userId = entity.userId
   accountPool.save()
 }
 

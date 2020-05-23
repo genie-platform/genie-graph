@@ -45,6 +45,7 @@ type AccountPool @entity {
   poolAddress: Bytes!
   account: Account!
   balance: BigInt!
+  userId: String
 }
 
 type Account @entity {
